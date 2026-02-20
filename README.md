@@ -1,24 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+University of Gujrat Learning Management System (LMS) built with Next.js (App Router) and MongoDB.
 
 ## Getting Started
 
-First, run the development server:
+### 1) Configure environment
+
+Create `.env.local` based on `.env.local.example`:
+
+```bash
+cp .env.local.example .env.local
+```
+
+Set `MONGODB_URI` to your MongoDB Atlas connection string.
+
+Never hardcode passwords or commit them to git. If a password was shared in chat, rotate it in MongoDB Atlas and update `.env.local`.
+
+### 2) Run the dev server
+
+Run:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3) Quick health check
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Once running, this should return `{ "ok": true }` if the database connects successfully:
+
+`GET /api/health`
+
+### 4) Seed an initial admin
+
+Set these in `.env.local` and run:
+
+```bash
+npm run seed
+```
+
+To also seed a sample teacher and offered courses for testing:
+
+```bash
+npm run seed:courses
+```
+
+To seed a more realistic demo dataset (teachers, students, enrollments, assignments):
+
+```bash
+npm run seed:demo
+```
+
+### 5) How teacher/admin login works
+
+- Everyone uses the same sign-in page: `/login`
+- Students can self-register at `/register`
+- Teachers and admins must already exist in the database:
+  - Create them from `Admin → Users` (after you have an admin account), or
+  - Seed them in development with `npm run seed:courses` (creates a teacher user)
+
+### Default admin (development)
+
+- Email: `admin@uog.edu.pk`
+- Password: `ChangeMe123!`
+
+## Interfaces and Roles (in progress)
+
+- Student: courses, enrollments, assignments, grades
+- Teacher: course management, assignments, grading
+- Admin: user management, departments, global settings
 
 ## Learn More
 
