@@ -58,10 +58,19 @@ npm run seed:demo
   - Create them from `Admin → Users` (after you have an admin account), or
   - Seed them in development with `npm run seed:courses` (creates a teacher user)
 
-### Default admin (development)
+### First admin
 
-- Email: `admin@uog.edu.pk`
-- Password: `ChangeMe123!`
+There is no default account. Create the first admin by running the seed script with your own credentials:
+
+```bash
+MONGODB_URI=... SEED_ADMIN_EMAIL=you@example.com SEED_ADMIN_PASSWORD='a-long-unique-password' npm run seed
+```
+
+Teacher and demo-student passwords are taken from `SEED_TEACHER_PASSWORD` / `SEED_DEMO_STUDENT_PASSWORD`; if unset, a random password is generated and printed once.
+
+### Deployment checklist
+
+Set these environment variables on your host (e.g. Vercel) or the app cannot reach the database or sign users in: `MONGODB_URI`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`. Then run the seed once against that database.
 
 ## Interfaces and Roles (in progress)
 

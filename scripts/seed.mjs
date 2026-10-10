@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
+import { randomBytes } from "node:crypto";
 
 dotenv.config({ path: ".env.local" });
 dotenv.config();
@@ -13,9 +14,10 @@ const seedSampleCourses =
   process.argv.includes("--sample-courses") || process.env.SEED_SAMPLE_COURSES === "1";
 const seedDemo = process.argv.includes("--demo") || process.env.SEED_DEMO === "1";
 const teacherEmail = process.env.SEED_TEACHER_EMAIL ?? "teacher@uog.edu.pk";
-const teacherPassword = process.env.SEED_TEACHER_PASSWORD ?? "ChangeMe123!";
+const generatePassword = () => randomBytes(12).toString("base64url");
+const teacherPassword = process.env.SEED_TEACHER_PASSWORD ?? generatePassword();
 const teacherName = process.env.SEED_TEACHER_NAME ?? "UoG Teacher";
-const demoStudentPassword = process.env.SEED_DEMO_STUDENT_PASSWORD ?? "ChangeMe123!";
+const demoStudentPassword = process.env.SEED_DEMO_STUDENT_PASSWORD ?? generatePassword();
 const demoStudentCount = Number(process.env.SEED_DEMO_STUDENT_COUNT ?? "12");
 
 if (!mongodbUri) {
@@ -123,13 +125,14 @@ if (seedSampleCourses || seedDemo) {
   }
 
   console.log(`Seeded teacher: ${teacherEmail}`);
+  if (!process.env.SEED_TEACHER_PASSWORD) console.log(`Generated teacher password (shown once): ${teacherPassword}`);
   console.log(`Seeded offered courses: ${courses.length}`);
 }
 
 if (seedDemo) {
   const teachers = [
     { email: teacherEmail, name: teacherName, password: teacherPassword },
-    { email: "teacher2@uog.edu.pk", name: "UoG Teacher (CS Dept)", password: "ChangeMe123!" },
+    { email: "teacher2@uog.edu.pk", name: "UoG Teacher (CS Dept)", password: teacherPassword },
   ];
 
   for (const t of teachers) {
